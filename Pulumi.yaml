@@ -1,0 +1,3 @@
+name: pulumi-sample-certificate
+runtime: python
+description: Troubleshooting
