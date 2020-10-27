@@ -4,7 +4,7 @@ DNS nameservers
 import pulumi
 from pulumi_aws import route53, Provider, acm
 
-domain = "mydomain.com"
+domain = pulumi.Config("app").require("domain")
 
 # Create a new zone
 zone = route53.Zone(
@@ -44,5 +44,13 @@ validation_record = route53.Record(
         provider=provider_us_east
     ),
 )
+
+validation = acm.CertificateValidation(
+    resource_name="certificate-validation",
+    certificate_arn=certificate.arn,
+    validation_record_fqdns=[validation_record.fqdn],
+    opts=pulumi.ResourceOptions(provider=provider_us_east),
+)
+
 
 pulumi.export("certificate_arn", certificate.arn)
